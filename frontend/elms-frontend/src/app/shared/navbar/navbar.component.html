@@ -1,0 +1,14 @@
+<nav class="navbar">
+  <div class="brand">ELMS</div>
+  <div class="nav-links" *ngIf="currentUser$ | async as user">
+    <a routerLink="/dashboard">Dashboard</a>
+    <a routerLink="/leaves" *ngIf="!isManager()">My Leaves</a>
+    <a routerLink="/leaves/apply" *ngIf="!isManager()">Apply Leave</a>
+    <a routerLink="/manager/team-leaves" *ngIf="isManager()">Team Leaves</a>
+  </div>
+  <div class="user-info" *ngIf="currentUser$ | async as user">
+    <span>{{ user?.name }}</span>
+    <span class="role-badge">{{ user?.role }}</span>
+    <button (click)="logout()">Logout</button>
+  </div>
+</nav>
