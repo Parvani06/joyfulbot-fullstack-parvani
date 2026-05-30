@@ -1,0 +1,75 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Team Leave Applications</h2>
+    <a routerLink="/manager" class="btn-back">← Back to Dashboard</a>
+  </div>
+
+  <div class="success-msg" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <div class="filter-section">
+    <label>Status Filter:</label>
+    <select [(ngModel)]="selectedStatus" (change)="onStatusFilterChange()">
+      <option *ngFor="let status of statusFilter" [value]="status">{{ status }}</option>
+    </select>
+  </div>
+
+  <div class="loading" *ngIf="loading">Loading...</div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table *ngIf="leaves.length > 0">
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Leave Type</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Days</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let leave of leaves">
+          <td>{{ leave.employeeName }}</td>
+          <td>{{ leave.leaveTypeName }}</td>
+          <td>{{ leave.startDate }}</td>
+          <td>{{ leave.endDate }}</td>
+          <td>{{ leave.totalDays }}</td>
+          <td>{{ leave.reason }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="leave.status.toLowerCase()">
+              {{ leave.status }}
+            </span>
+          </td>
+          <td>
+            <div *ngIf="leave.status === 'PENDING'">
+              <button *ngIf="editingRemarksId !== leave.id" class="btn-approve" (click)="showApproveRemarks(leave.id)">Approve</button>
+              <button *ngIf="editingRemarksId !== leave.id" class="btn-reject" (click)="showRejectRemarks(leave.id)">Reject</button>
+              <div *ngIf="editingRemarksId === leave.id" class="remarks-input">
+                <textarea [(ngModel)]="editingRemarks" placeholder="Add remarks (optional)"></textarea>
+                <button class="btn-confirm" (click)="approveLeave(leave.id)">Approve</button>
+                <button class="btn-confirm" (click)="rejectLeave(leave.id)">Reject</button>
+                <button class="btn-cancel" (click)="cancelRemarks()">Cancel</button>
+              </div>
+            </div>
+            <div *ngIf="leave.status !== 'PENDING'">-</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="empty" *ngIf="leaves.length === 0">No leave applications found.</div>
+  </div>
+
+  <div class="pagination" *ngIf="!loading && leaves.length > 0">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">← Previous</button>
+    <span *ngFor="let page of getPageNumbers()" 
+          (click)="goToPage(page)" 
+          [ngClass]="{'active': page === currentPage}"
+          class="page-number">
+      {{ page }}
+    </span>
+    <button (click)="nextPage()" [disabled]="currentPage === getTotalPages()">Next →</button>
+  </div>
+</div>

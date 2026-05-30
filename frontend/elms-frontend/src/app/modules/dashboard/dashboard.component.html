@@ -1,0 +1,33 @@
+<div class="dashboard-container">
+  <app-navbar></app-navbar>
+
+  <div class="content">
+    <h2>Welcome, {{ currentUser?.name }}!</h2>
+
+    <div *ngIf="!isManager">
+      <h3>Your Leave Balances ({{ currentYear }})</h3>
+      <div class="balance-cards">
+        <div class="balance-card" *ngFor="let balance of leaveBalances">
+          <h4>{{ balance.leaveTypeName }}</h4>
+          <div class="balance-info">
+            <span>Total: {{ balance.totalDays }}</span>
+            <span>Used: {{ balance.usedDays }}</span>
+            <span class="remaining">Available: {{ balance.remainingDays }}</span>
+          </div>
+        </div>
+        <div *ngIf="leaveBalances.length === 0" class="empty">
+          No leave balance data found for {{ currentYear }}.
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isManager">
+      <div class="manager-actions">
+        <a routerLink="/manager" class="action-card">
+          <h4>Manager Dashboard</h4>
+          <p>View analytics and manage leave applications</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

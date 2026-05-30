@@ -1,0 +1,134 @@
+.page-container {
+  padding: 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 { color: #1a237e; margin: 0; }
+}
+
+.btn-primary {
+  background: #1a237e;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+
+  &:hover { background: #283593; }
+}
+
+.success-msg {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 10px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.error-msg {
+  background: #ffebee;
+  color: #c62828;
+  padding: 10px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    background: #1a237e;
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 13px;
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #333;
+  }
+
+  tr:hover td { background: #f5f5f5; }
+}
+
+.status-badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.pending { background: #fff3e0; color: #e65100; }
+  &.approved { background: #e8f5e9; color: #2e7d32; }
+  &.rejected { background: #ffebee; color: #c62828; }
+}
+
+.btn-approve {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+  font-size: 12px;
+
+  &:hover { background: #1b5e20; }
+}
+
+.btn-reject {
+  background: #c62828;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+
+  &:hover { background: #b71c1c; }
+}
+
+.btn-cancel-leave {
+  background: #ff9800;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+
+  &:hover { background: #f57c00; }
+}
+
+.empty {
+  padding: 40px;
+  text-align: center;
+  color: #999;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}

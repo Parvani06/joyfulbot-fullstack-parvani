@@ -1,0 +1,61 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Apply for Leave</h2>
+    <a routerLink="/leaves" class="btn-back">← Back to List</a>
+  </div>
+
+  <div class="form-card">
+    <div class="success-msg" *ngIf="successMessage">{{ successMessage }}</div>
+    <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <form [formGroup]="applyForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Leave Type</label>
+        <select formControlName="leaveTypeId">
+          <option value="">Select leave type</option>
+          <option *ngFor="let type of leaveTypes" [value]="type.id">
+            {{ type.name }} ({{ type.maxDaysPerYear }} days/year)
+          </option>
+        </select>
+        <span class="error" *ngIf="applyForm.get('leaveTypeId').invalid && applyForm.get('leaveTypeId').touched">
+          Please select a leave type
+        </span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="date" formControlName="startDate" />
+          <span class="error" *ngIf="applyForm.get('startDate').invalid && applyForm.get('startDate').touched">
+            Start date is required
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="date" formControlName="endDate" />
+          <span class="error" *ngIf="applyForm.get('endDate').invalid && applyForm.get('endDate').touched">
+            End date is required
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Total Days</label>
+        <input type="text" formControlName="totalDays" readonly />
+      </div>
+
+      <div class="form-group">
+        <label>Reason</label>
+        <textarea formControlName="reason" rows="4" placeholder="Enter reason for leave"></textarea>
+        <span class="error" *ngIf="applyForm.get('reason').invalid && applyForm.get('reason').touched">
+          Reason is required
+        </span>
+      </div>
+
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Submitting...' : 'Submit Application' }}
+      </button>
+    </form>
+  </div>
+</div>

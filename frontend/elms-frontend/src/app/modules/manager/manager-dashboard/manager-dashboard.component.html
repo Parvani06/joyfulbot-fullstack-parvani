@@ -1,0 +1,33 @@
+<div class="dashboard-container">
+  <app-navbar></app-navbar>
+
+  <div class="content">
+    <h2>Manager Dashboard</h2>
+    <p>Welcome, {{ currentUser?.name }}!</p>
+
+    <div class="loading" *ngIf="loading">Loading analytics...</div>
+
+    <div *ngIf="!loading" class="analytics-section">
+      <h3>Leave Analytics</h3>
+      <div class="analytics-cards">
+        <div class="analytics-card pending">
+          <div class="card-value">{{ analytics.PENDING || 0 }}</div>
+          <div class="card-label">Pending</div>
+        </div>
+        <div class="analytics-card approved">
+          <div class="card-value">{{ analytics.APPROVED || 0 }}</div>
+          <div class="card-label">Approved</div>
+        </div>
+        <div class="analytics-card rejected">
+          <div class="card-value">{{ analytics.REJECTED || 0 }}</div>
+          <div class="card-label">Rejected</div>
+        </div>
+        <div class="analytics-card total">
+          <div class="card-value">{{ analytics.TOTAL || 0 }}</div>
+          <div class="card-label">Total</div>
+        </div>
+      </div>
+      <button class="btn-primary" (click)="viewTeamLeaves()">View Team Leaves</button>
+    </div>
+  </div>
+</div>

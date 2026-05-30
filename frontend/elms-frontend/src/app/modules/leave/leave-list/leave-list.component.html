@@ -1,0 +1,56 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-left">
+      <a routerLink="/dashboard" class="btn-back">←</a>
+      <h2>{{ isManager ? 'All Leave Applications' : 'My Leave Applications' }}</h2>
+    </div>
+    <a routerLink="/leaves/apply" class="btn-primary" *ngIf="!isManager">Apply New Leave</a>
+  </div>
+
+  <div class="success-msg" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <div class="loading" *ngIf="loading">Loading...</div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table *ngIf="applications.length > 0">
+      <thead>
+        <tr>
+          <th *ngIf="isManager">Employee</th>
+          <th>Leave Type</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Days</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th *ngIf="isManager">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let app of applications">
+          <td *ngIf="isManager">{{ app.employeeName }}</td>
+          <td>{{ app.leaveTypeName }}</td>
+          <td>{{ app.startDate }}</td>
+          <td>{{ app.endDate }}</td>
+          <td>{{ app.totalDays }}</td>
+          <td>{{ app.reason }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="app.status.toLowerCase()">
+              {{ app.status }}
+            </span>
+          </td>
+          <td *ngIf="isManager && app.status === 'PENDING'">
+            <button class="btn-approve" (click)="reviewLeave(app.id, 'APPROVED')">Approve</button>
+            <button class="btn-reject" (click)="reviewLeave(app.id, 'REJECTED')">Reject</button>
+          </td>
+          <td *ngIf="isManager && app.status !== 'PENDING'">-</td>
+          <td *ngIf="!isManager && app.status === 'PENDING'">
+            <button class="btn-cancel-leave" (click)="cancelLeave(app.id)">Cancel</button>
+          </td>
+          <td *ngIf="!isManager && app.status !== 'PENDING'">-</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="empty" *ngIf="applications.length === 0">No applications found.</div>
+  </div>
+</div>

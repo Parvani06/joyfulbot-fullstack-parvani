@@ -1,0 +1,101 @@
+.page-container {
+  padding: 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 { color: #1a237e; margin: 0; }
+}
+
+.btn-back {
+  color: #1a237e;
+  text-decoration: none;
+  font-size: 14px;
+
+  &:hover { text-decoration: underline; }
+}
+
+.form-card {
+  background: white;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  max-width: 600px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+      border-color: #1a237e;
+    }
+  }
+
+  textarea { resize: vertical; }
+}
+
+.error {
+  color: #d32f2f;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+.success-msg {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 10px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.error-msg {
+  background: #ffebee;
+  color: #c62828;
+  padding: 10px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+button {
+  background: #1a237e;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 15px;
+  cursor: pointer;
+
+  &:disabled {
+    background: #9fa8da;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) { background: #283593; }
+}
