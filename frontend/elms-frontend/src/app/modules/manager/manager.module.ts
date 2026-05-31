@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ManagerDashboardComponent } from './manager-dashboard/manager-dashboard.component';
 import { TeamLeavesComponent } from './team-leaves/team-leaves.component';
 import { SharedModule } from '../../shared/shared.module';
+import { MaterialModule } from '../../shared/material.module';
 
 const routes: Routes = [
   { path: '', component: ManagerDashboardComponent },
@@ -20,7 +21,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     RouterModule.forChild(routes),
-    SharedModule
+    SharedModule,
+    MaterialModule
   ]
 })
 export class ManagerModule { }

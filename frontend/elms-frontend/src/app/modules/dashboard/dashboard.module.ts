@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 import { SharedModule } from '../../shared/shared.module';
+import { MaterialModule } from '../../shared/material.module';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent }
@@ -17,7 +18,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     RouterModule.forChild(routes),
-    SharedModule
+    SharedModule,
+    MaterialModule
   ]
 })
 export class DashboardModule {}

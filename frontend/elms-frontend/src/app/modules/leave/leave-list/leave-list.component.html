@@ -1,56 +1,94 @@
-<div class="page-container">
+﻿<div class="page-container">
   <div class="page-header">
     <div class="header-left">
-      <a routerLink="/dashboard" class="btn-back">←</a>
+      <a mat-icon-button color="primary" routerLink="/dashboard" aria-label="Back to dashboard">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
       <h2>{{ isManager ? 'All Leave Applications' : 'My Leave Applications' }}</h2>
     </div>
-    <a routerLink="/leaves/apply" class="btn-primary" *ngIf="!isManager">Apply New Leave</a>
+    <button mat-raised-button color="primary" routerLink="/leaves/apply" *ngIf="!isManager">
+      Apply New Leave
+    </button>
   </div>
 
-  <div class="success-msg" *ngIf="successMessage">{{ successMessage }}</div>
-  <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <mat-card class="message-card" *ngIf="successMessage || errorMessage">
+    <div class="success-msg" *ngIf="successMessage">{{ successMessage }}</div>
+    <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
+  </mat-card>
 
-  <div class="loading" *ngIf="loading">Loading...</div>
+  <div class="controls-row">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Search applications</mat-label>
+      <input matInput (input)="applyFilter($event)" placeholder="Type to filter" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
 
-  <div class="table-container" *ngIf="!loading">
-    <table *ngIf="applications.length > 0">
-      <thead>
-        <tr>
-          <th *ngIf="isManager">Employee</th>
-          <th>Leave Type</th>
-          <th>From</th>
-          <th>To</th>
-          <th>Days</th>
-          <th>Reason</th>
-          <th>Status</th>
-          <th *ngIf="isManager">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let app of applications">
-          <td *ngIf="isManager">{{ app.employeeName }}</td>
-          <td>{{ app.leaveTypeName }}</td>
-          <td>{{ app.startDate }}</td>
-          <td>{{ app.endDate }}</td>
-          <td>{{ app.totalDays }}</td>
-          <td>{{ app.reason }}</td>
-          <td>
-            <span class="status-badge" [ngClass]="app.status.toLowerCase()">
-              {{ app.status }}
-            </span>
-          </td>
-          <td *ngIf="isManager && app.status === 'PENDING'">
-            <button class="btn-approve" (click)="reviewLeave(app.id, 'APPROVED')">Approve</button>
-            <button class="btn-reject" (click)="reviewLeave(app.id, 'REJECTED')">Reject</button>
-          </td>
-          <td *ngIf="isManager && app.status !== 'PENDING'">-</td>
-          <td *ngIf="!isManager && app.status === 'PENDING'">
-            <button class="btn-cancel-leave" (click)="cancelLeave(app.id)">Cancel</button>
-          </td>
-          <td *ngIf="!isManager && app.status !== 'PENDING'">-</td>
-        </tr>
-      </tbody>
+  <mat-card class="table-card">
+    <div class="loading" *ngIf="loading">
+      <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z1" *ngIf="!loading && applications.length > 0">
+      <ng-container matColumnDef="employeeName" *ngIf="isManager">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Employee</th>
+        <td mat-cell *matCellDef="let app">{{ app.employeeName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="leaveTypeName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Leave Type</th>
+        <td mat-cell *matCellDef="let app">{{ app.leaveTypeName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>From</th>
+        <td mat-cell *matCellDef="let app">{{ app.startDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>To</th>
+        <td mat-cell *matCellDef="let app">{{ app.endDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="totalDays">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Days</th>
+        <td mat-cell *matCellDef="let app">{{ app.totalDays }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="reason">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Reason</th>
+        <td mat-cell *matCellDef="let app">{{ app.reason }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let app">
+          <mat-chip [color]="app.status === 'APPROVED' ? 'primary' : app.status === 'REJECTED' ? 'warn' : ''" selected>
+            {{ app.status }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let app">
+          <ng-container *ngIf="isManager; else userActions">
+            <button mat-mini-button color="primary" *ngIf="app.status === 'PENDING'" (click)="reviewLeave(app.id, 'APPROVED')">Approve</button>
+            <button mat-mini-button color="warn" *ngIf="app.status === 'PENDING'" (click)="reviewLeave(app.id, 'REJECTED')">Reject</button>
+            <span *ngIf="app.status !== 'PENDING'">-</span>
+          </ng-container>
+          <ng-template #userActions>
+            <button mat-mini-button color="accent" *ngIf="app.status === 'PENDING'" (click)="cancelLeave(app.id)">Cancel</button>
+            <span *ngIf="app.status !== 'PENDING'">-</span>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <div class="empty" *ngIf="applications.length === 0">No applications found.</div>
-  </div>
+
+    <div class="empty" *ngIf="!loading && applications.length === 0">No applications found.</div>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </mat-card>
 </div>

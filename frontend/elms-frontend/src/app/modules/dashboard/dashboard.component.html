@@ -6,28 +6,31 @@
 
     <div *ngIf="!isManager">
       <h3>Your Leave Balances ({{ currentYear }})</h3>
-      <div class="balance-cards">
-        <div class="balance-card" *ngFor="let balance of leaveBalances">
-          <h4>{{ balance.leaveTypeName }}</h4>
-          <div class="balance-info">
-            <span>Total: {{ balance.totalDays }}</span>
-            <span>Used: {{ balance.usedDays }}</span>
-            <span class="remaining">Available: {{ balance.remainingDays }}</span>
-          </div>
-        </div>
-        <div *ngIf="leaveBalances.length === 0" class="empty">
-          No leave balance data found for {{ currentYear }}.
-        </div>
+
+      <div class="balance-grid">
+        <mat-card class="balance-card" *ngFor="let balance of leaveBalances">
+          <mat-card-header>
+            <mat-card-title>{{ balance.leaveTypeName }}</mat-card-title>
+            <mat-icon mat-card-avatar>event_note</mat-icon>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Total: {{ balance.totalDays }}</p>
+            <p>Used: {{ balance.usedDays }}</p>
+            <p class="remaining">Available: {{ balance.remainingDays }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div *ngIf="leaveBalances.length === 0" class="empty">
+        No leave balance data found for {{ currentYear }}.
       </div>
     </div>
 
     <div *ngIf="isManager">
-      <div class="manager-actions">
-        <a routerLink="/manager" class="action-card">
-          <h4>Manager Dashboard</h4>
-          <p>View analytics and manage leave applications</p>
-        </a>
-      </div>
+      <mat-card class="manager-action-card" routerLink="/manager">
+        <mat-card-title>Manager Dashboard</mat-card-title>
+        <mat-card-content>View analytics and manage leave applications</mat-card-content>
+      </mat-card>
     </div>
   </div>
 </div>

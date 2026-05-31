@@ -1,14 +1,21 @@
-<nav class="navbar">
-  <div class="brand">ELMS</div>
-  <div class="nav-links" *ngIf="currentUser$ | async as user">
-    <a routerLink="/dashboard">Dashboard</a>
-    <a routerLink="/leaves" *ngIf="!isManager()">My Leaves</a>
-    <a routerLink="/leaves/apply" *ngIf="!isManager()">Apply Leave</a>
-    <a routerLink="/manager/team-leaves" *ngIf="isManager()">Team Leaves</a>
+<mat-toolbar color="primary" class="navbar">
+  <div class="toolbar-left">
+    <button mat-button class="brand" routerLink="/dashboard">
+      <mat-icon>business</mat-icon>
+      ELMS
+    </button>
+    <span class="spacer"></span>
+    <button mat-button routerLink="/dashboard">Dashboard</button>
+    <button mat-button routerLink="/leaves" *ngIf="!isManager()">My Leaves</button>
+    <button mat-button routerLink="/leaves/apply" *ngIf="!isManager()">Apply Leave</button>
+    <button mat-button routerLink="/manager/team-leaves" *ngIf="isManager()">Team Leaves</button>
   </div>
-  <div class="user-info" *ngIf="currentUser$ | async as user">
-    <span>{{ user?.name }}</span>
-    <span class="role-badge">{{ user?.role }}</span>
-    <button (click)="logout()">Logout</button>
+  <div class="toolbar-right" *ngIf="currentUser$ | async as user">
+    <mat-icon>account_circle</mat-icon>
+    <span class="user-name">{{ user.name }}</span>
+    <mat-chip-list>
+      <mat-chip color="accent" selected>{{ user.role }}</mat-chip>
+    </mat-chip-list>
+    <button mat-stroked-button color="accent" (click)="logout()">Logout</button>
   </div>
-</nav>
+</mat-toolbar>

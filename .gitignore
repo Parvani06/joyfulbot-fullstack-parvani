@@ -1,0 +1,18 @@
+# Backend
+backend/elms-backend/target/
+backend/elms-backend/.mvn/
+*.class
+*.jar
+
+# Frontend
+frontend/elms-frontend/node_modules/
+frontend/elms-frontend/dist/
+frontend/elms-frontend/.angular/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log

@@ -90,7 +90,11 @@ export class LeaveApplyComponent implements OnInit {
         }
       },
       error => {
-        this.errorMessage = 'Failed to submit application. Please try again.';
+        if (error.error && error.error.message) {
+          this.errorMessage = error.error.message;
+        } else {
+          this.errorMessage = 'Failed to submit application. Please try again.';
+        }
         this.loading = false;
       }
     );

@@ -5,10 +5,14 @@ import com.elms.elms.dto.request.RegisterRequest;
 import com.elms.elms.dto.response.AuthResponse;
 import com.elms.elms.entity.Department;
 import com.elms.elms.entity.User;
+import com.elms.elms.entity.LeaveType;
+import com.elms.elms.entity.LeaveBalance;
 import com.elms.elms.exception.BadRequestException;
 import com.elms.elms.exception.ResourceNotFoundException;
 import com.elms.elms.repository.DepartmentRepository;
 import com.elms.elms.repository.UserRepository;
+import com.elms.elms.repository.LeaveTypeRepository;
+import com.elms.elms.repository.LeaveBalanceRepository;
 import com.elms.elms.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +31,8 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+    private final LeaveTypeRepository leaveTypeRepository;
+    private final LeaveBalanceRepository leaveBalanceRepository;
 
     public AuthResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
@@ -68,6 +74,20 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
+        // Auto-create leave balances for current year
+        int currentYear = java.time.LocalDate.now().getYear();
+        java.util.List<LeaveType> leaveTypes = leaveTypeRepository.findAll();
+        for (LeaveType leaveType : leaveTypes) {
+            LeaveBalance balance = LeaveBalance.builder()
+                    .user(user)
+                    .leaveType(leaveType)
+                    .year(currentYear)
+                    .totalDays(leaveType.getMaxDaysPerYear())
+                    .usedDays(0)
+                    .remainingDays(leaveType.getMaxDaysPerYear())
+                    .build();
+            leaveBalanceRepository.save(balance);
+        }
 
         return AuthResponse.builder()
                 .email(user.getEmail())

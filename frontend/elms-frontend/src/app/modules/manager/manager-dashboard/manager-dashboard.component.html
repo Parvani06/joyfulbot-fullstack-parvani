@@ -2,32 +2,35 @@
   <app-navbar></app-navbar>
 
   <div class="content">
-    <h2>Manager Dashboard</h2>
-    <p>Welcome, {{ currentUser?.name }}!</p>
-
-    <div class="loading" *ngIf="loading">Loading analytics...</div>
-
-    <div *ngIf="!loading" class="analytics-section">
-      <h3>Leave Analytics</h3>
-      <div class="analytics-cards">
-        <div class="analytics-card pending">
-          <div class="card-value">{{ analytics.PENDING || 0 }}</div>
-          <div class="card-label">Pending</div>
-        </div>
-        <div class="analytics-card approved">
-          <div class="card-value">{{ analytics.APPROVED || 0 }}</div>
-          <div class="card-label">Approved</div>
-        </div>
-        <div class="analytics-card rejected">
-          <div class="card-value">{{ analytics.REJECTED || 0 }}</div>
-          <div class="card-label">Rejected</div>
-        </div>
-        <div class="analytics-card total">
-          <div class="card-value">{{ analytics.TOTAL || 0 }}</div>
-          <div class="card-label">Total</div>
-        </div>
+    <div class="page-header">
+      <div>
+        <h2>Manager Dashboard</h2>
+        <p>Welcome, {{ currentUser?.name }}!</p>
       </div>
-      <button class="btn-primary" (click)="viewTeamLeaves()">View Team Leaves</button>
+      <button mat-raised-button color="primary" (click)="viewTeamLeaves()">View Team Leaves</button>
+    </div>
+
+    <div class="spinner-container" *ngIf="loading">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <div *ngIf="!loading" class="analytics-grid">
+      <mat-card class="analytics-card" *ngFor="let item of [
+        { label: 'Pending', value: analytics.PENDING || 0, icon: 'hourglass_empty', color: 'accent' },
+        { label: 'Approved', value: analytics.APPROVED || 0, icon: 'check_circle', color: 'primary' },
+        { label: 'Rejected', value: analytics.REJECTED || 0, icon: 'cancel', color: 'warn' },
+        { label: 'Total', value: analytics.TOTAL || 0, icon: 'assessment', color: 'primary' }
+      ]">
+        <mat-card-header>
+          <div mat-card-avatar class="analytics-icon {{ item.color }}">
+            <mat-icon>{{ item.icon }}</mat-icon>
+          </div>
+          <mat-card-title>{{ item.label }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h3>{{ item.value }}</h3>
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
 </div>
