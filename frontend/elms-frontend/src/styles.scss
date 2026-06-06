@@ -1,9 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: #f5f5f5;
+}
 
-/* Material form field global styles */
+* {
+  box-sizing: border-box;
+}
+
 .mat-form-field {
   width: 100%;
 }
@@ -12,8 +23,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   padding-bottom: 16px;
 }
 
-/* Override Material input padding for better spacing */
-.mat-form-field-appearance-outline.mat-form-field-disabled .mat-form-field-flex > *:not(.mat-form-field-infix):not(.mat-form-field-ripple):not(.notranslate) {
-  color: rgba(0, 0, 0, 0.38);
+.page-header {
+  padding: 16px 24px 8px 24px;
 }
 
+.page-container {
+  padding: 0;
+}

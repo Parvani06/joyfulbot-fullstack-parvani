@@ -2,7 +2,7 @@
   <app-navbar></app-navbar>
 
   <div class="content">
-    <h2>Welcome, {{ currentUser?.name }}!</h2>
+    <h2 style="margin-bottom:24px;">Welcome, {{ currentUser?.name }}!</h2>
 
     <div *ngIf="!isManager">
       <h3>Your Leave Balances ({{ currentYear }})</h3>
@@ -27,10 +27,36 @@
     </div>
 
     <div *ngIf="isManager">
-      <mat-card class="manager-action-card" routerLink="/manager">
-        <mat-card-title>Manager Dashboard</mat-card-title>
-        <mat-card-content>View analytics and manage leave applications</mat-card-content>
-      </mat-card>
+      <h3 style="margin-bottom:16px;">Team Leave Analytics</h3>
+      <div class="analytics-grid">
+        <mat-card class="analytics-card pending-card">
+          <mat-card-content>
+            <div class="analytics-number">{{ analytics.PENDING }}</div>
+            <div class="analytics-label">Pending</div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="analytics-card approved-card">
+          <mat-card-content>
+            <div class="analytics-number">{{ analytics.APPROVED }}</div>
+            <div class="analytics-label">Approved</div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="analytics-card rejected-card">
+          <mat-card-content>
+            <div class="analytics-number">{{ analytics.REJECTED }}</div>
+            <div class="analytics-label">Rejected</div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="analytics-card total-card">
+          <mat-card-content>
+            <div class="analytics-number">{{ analytics.TOTAL }}</div>
+            <div class="analytics-label">Total</div>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </div>
   </div>
 </div>

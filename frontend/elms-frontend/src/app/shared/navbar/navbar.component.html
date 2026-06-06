@@ -10,12 +10,21 @@
     <button mat-button routerLink="/leaves/apply" *ngIf="!isManager()">Apply Leave</button>
     <button mat-button routerLink="/manager/team-leaves" *ngIf="isManager()">Team Leaves</button>
   </div>
-  <div class="toolbar-right" *ngIf="currentUser$ | async as user">
-    <mat-icon>account_circle</mat-icon>
-    <span class="user-name">{{ user.name }}</span>
-    <mat-chip-list>
-      <mat-chip color="accent" selected>{{ user.role }}</mat-chip>
-    </mat-chip-list>
-    <button mat-stroked-button color="accent" (click)="logout()">Logout</button>
+  <div class="toolbar-right" *ngIf="userName">
+    <button mat-button [matMenuTriggerFor]="profileMenu">
+      <mat-icon>account_circle</mat-icon>
+      <span>{{ userName }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #profileMenu="matMenu">
+      <div mat-menu-item disabled style="opacity:1;">
+        <span class="role-badge">{{ userRole }}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        Logout
+      </button>
+    </mat-menu>
   </div>
 </mat-toolbar>

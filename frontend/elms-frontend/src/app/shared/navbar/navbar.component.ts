@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit {
-  currentUser$: Observable<any>;
+export class NavbarComponent implements OnInit, OnDestroy {
+  userName: string = '';
+  userRole: string = '';
+  private currentUserSub: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -17,7 +19,21 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.currentUser$ = this.authService.currentUser$;
+    this.currentUserSub = this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.userName = user.name;
+        this.userRole = user.role;
+      } else {
+        this.userName = '';
+        this.userRole = '';
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.currentUserSub) {
+      this.currentUserSub.unsubscribe();
+    }
   }
 
   isManager(): boolean {

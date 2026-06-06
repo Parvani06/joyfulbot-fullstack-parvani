@@ -19,7 +19,6 @@ export class LeaveListComponent implements OnInit, AfterViewInit {
   loading: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
-  filterValue: string = '';
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
@@ -31,23 +30,11 @@ export class LeaveListComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.isManager = this.authService.isManager();
-    this.displayedColumns = this.isManager
-      ? ['employeeName', 'leaveTypeName', 'startDate', 'endDate', 'totalDays', 'reason', 'status', 'actions']
-      : ['leaveTypeName', 'startDate', 'endDate', 'totalDays', 'reason', 'status', 'actions'];
-
-    this.dataSource.filterPredicate = (data: LeaveApplication, filter: string) => {
-      const dataStr = (
-        (data.employeeName || '') +
-        data.leaveTypeName +
-        data.startDate +
-        data.endDate +
-        data.totalDays +
-        data.reason +
-        data.status
-      ).toLowerCase();
-      return dataStr.indexOf(filter) !== -1;
-    };
-
+    if (this.isManager) {
+      this.displayedColumns = ['employeeName', 'leaveTypeName', 'startDate', 'endDate', 'totalDays', 'reason', 'status', 'remarks', 'actions'];
+    } else {
+      this.displayedColumns = ['leaveTypeName', 'startDate', 'endDate', 'totalDays', 'reason', 'status', 'remarks', 'actions'];
+    }
     this.loadApplications();
   }
 
@@ -56,17 +43,11 @@ export class LeaveListComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.filterValue = filterValue.trim().toLowerCase();
-    this.dataSource.filter = this.filterValue;
-  }
-
   loadApplications() {
     this.loading = true;
     this.errorMessage = '';
 
-    const successHandler = (response: any) => {
+    var successHandler = (response: any) => {
       if (response.success) {
         this.applications = response.data;
         this.dataSource.data = this.applications;
@@ -74,7 +55,7 @@ export class LeaveListComponent implements OnInit, AfterViewInit {
       this.loading = false;
     };
 
-    const errorHandler = () => {
+    var errorHandler = () => {
       this.errorMessage = 'Failed to load applications.';
       this.loading = false;
     };
@@ -87,7 +68,7 @@ export class LeaveListComponent implements OnInit, AfterViewInit {
   }
 
   reviewLeave(id: number, status: string) {
-    const request = { status: status as 'APPROVED' | 'REJECTED', remarks: status === 'APPROVED' ? 'Approved.' : 'Rejected.' };
+    var request = { status: status as 'APPROVED' | 'REJECTED', remarks: status === 'APPROVED' ? 'Approved.' : 'Rejected.' };
     this.leaveService.reviewLeave(id, request).subscribe(
       response => {
         if (response.success) {

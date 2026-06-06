@@ -1,3 +1,11 @@
+:host {
+  display: block;
+}
+
+mat-toolbar {
+  margin: 0 !important;
+}
+
 mat-toolbar.navbar {
   display: flex;
   justify-content: space-between;
@@ -35,3 +43,11 @@ mat-chip {
   color: white;
 }
 
+:host {
+  display: block;
+}
+
+mat-toolbar {
+  margin: 0;
+  padding: 0 16px;
+}

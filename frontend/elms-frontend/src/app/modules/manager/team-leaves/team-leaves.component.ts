@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ManagerService } from '../../../services/manager.service';
 
 @Component({
@@ -6,15 +9,16 @@ import { ManagerService } from '../../../services/manager.service';
   templateUrl: './team-leaves.component.html',
   styleUrls: ['./team-leaves.component.scss']
 })
-export class TeamLeavesComponent implements OnInit {
+export class TeamLeavesComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+
   allLeaves: any[] = [];
   filteredLeaves: any[] = [];
+  dataSource = new MatTableDataSource<any>([]);
   loading: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
-
-  currentPage: number = 1;
-  pageSize: number = 10;
 
   selectedStatus: string = 'ALL';
   statusOptions: string[] = ['ALL', 'PENDING', 'APPROVED', 'REJECTED'];
@@ -29,6 +33,11 @@ export class TeamLeavesComponent implements OnInit {
     this.loadTeamLeaves();
   }
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
   loadTeamLeaves() {
     this.loading = true;
     this.errorMessage = '';
@@ -36,6 +45,7 @@ export class TeamLeavesComponent implements OnInit {
       response => {
         if (response.success) {
           this.allLeaves = response.data.content;
+          this.dataSource.data = this.allLeaves;
           this.applyFilter();
         }
         this.loading = false;
@@ -55,46 +65,14 @@ export class TeamLeavesComponent implements OnInit {
         leave => leave.status === this.selectedStatus
       );
     }
-    this.currentPage = 1;
+    this.dataSource.data = this.filteredLeaves;
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   onStatusFilterChange() {
     this.applyFilter();
-  }
-
-  getPagedLeaves(): any[] {
-    var start = (this.currentPage - 1) * this.pageSize;
-    var end = start + this.pageSize;
-    return this.filteredLeaves.slice(start, end);
-  }
-
-  getTotalPages(): number {
-    return Math.ceil(this.filteredLeaves.length / this.pageSize);
-  }
-
-  getPageNumbers(): number[] {
-    var totalPages = this.getTotalPages();
-    var pages = [];
-    for (var i = 1; i <= totalPages; i++) {
-      pages.push(i);
-    }
-    return pages;
-  }
-
-  previousPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  nextPage() {
-    if (this.currentPage < this.getTotalPages()) {
-      this.currentPage++;
-    }
-  }
-
-  goToPage(page: number) {
-    this.currentPage = page;
   }
 
   showRemarks(id: number, action: string) {

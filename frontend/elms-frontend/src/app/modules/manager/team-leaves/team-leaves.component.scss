@@ -1,5 +1,6 @@
 ﻿.page-container {
   padding: 24px;
+  padding-top: 16px;
 }
 
 .page-header {
@@ -72,10 +73,26 @@ table {
 }
 
 .status-badge {
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
+  display: inline-block;
+}
+
+.status-badge.pending {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.status-badge.approved {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-badge.rejected {
+  background: #ffebee;
+  color: #c62828;
 }
 
 .remarks-input {
@@ -97,28 +114,6 @@ table {
   color: #999;
 }
 
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-top: 24px;
-}
-
-.page-number {
-  padding: 6px 10px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-}
-
-.page-number:hover {
-  background: #f0f0f0;
-}
-
-.page-number.active {
-  background: #1a237e;
-  color: white;
-  border-color: #1a237e;
+mat-paginator {
+  width: 100%;
 }
