@@ -45,6 +45,15 @@ public class LeaveApplicationController {
                 leaveApplicationService.getMyApplications(userDetails.getUsername())));
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('EMPLOYEE')")
+    public ResponseEntity<ApiResponse<LeaveApplicationResponse>> getLeaveById(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(ApiResponse.success(
+                leaveApplicationService.getLeaveById(id)));
+    }
+
     @PutMapping("/{id}/review")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ApiResponse<LeaveApplicationResponse>> reviewLeave(

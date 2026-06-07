@@ -44,7 +44,7 @@ public class LeaveApplicationService {
             throw new BadRequestException("End date cannot be before start date");
         }
 
-        int totalDays = (int) ChronoUnit.DAYS.between(request.getStartDate(), request.getEndDate()) + 1;
+        int totalDays = calculateWorkingDays(request.getStartDate(), request.getEndDate());
         if (request.getStartDate().isBefore(java.time.LocalDate.now())) {
             throw new BadRequestException("Start date cannot be in the past");
         }
@@ -183,5 +183,25 @@ public class LeaveApplicationService {
                 .filter(a -> a.getStatus() == LeaveStatus.REJECTED).count());
         analytics.put("TOTAL", (long) applications.size());
         return analytics;
+    }
+
+    private int calculateWorkingDays(java.time.LocalDate start, java.time.LocalDate end) {
+        int workingDays = 0;
+        java.time.LocalDate current = start;
+        while (!current.isAfter(end)) {
+            java.time.DayOfWeek day = current.getDayOfWeek();
+            if (day != java.time.DayOfWeek.SATURDAY && day != java.time.DayOfWeek.SUNDAY) {
+                workingDays++;
+            }
+            current = current.plusDays(1);
+        }
+        return workingDays;
+    }
+
+    public LeaveApplicationResponse getLeaveById(Long id) {
+        LeaveApplication application = leaveApplicationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Leave application not found with id: " + id));
+        return mapToResponse(application);
     }
 }

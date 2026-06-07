@@ -62,9 +62,16 @@ export class LeaveApplyComponent implements OnInit {
     if (startDate && endDate) {
       var start = new Date(startDate);
       var end = new Date(endDate);
-      var diffTime = Math.abs(end.getTime() - start.getTime());
-      var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      this.applyForm.get('totalDays').setValue(diffDays);
+      var workingDays = 0;
+      var current = new Date(start);
+      while (current <= end) {
+        var day = current.getDay();
+        if (day !== 0 && day !== 6) {
+          workingDays++;
+        }
+        current.setDate(current.getDate() + 1);
+      }
+      this.applyForm.get('totalDays').setValue(workingDays);
     }
   }
 

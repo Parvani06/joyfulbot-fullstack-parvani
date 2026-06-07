@@ -3,7 +3,9 @@
 A full-stack web application for managing employee leaves in an enterprise environment.
 
 ## Architecture
+
 Angular 8 SPA (Frontend) ←→ Spring Boot 3.x REST API (Backend) ←→ MySQL 8 Database
+
 **3-Tier Architecture:**
 - **Presentation Layer**: Angular 8 SPA — routing, forms, HTTP calls, JWT interceptor
 - **Business/API Layer**: Spring Boot REST API — controllers, services, JWT security
@@ -11,35 +13,36 @@ Angular 8 SPA (Frontend) ←→ Spring Boot 3.x REST API (Backend) ←→ MySQL 
 
 ## Tech Stack
 
-| Layer | Technology | Version |
-|-------|-----------|---------|
-| Frontend | Angular | 8.x |
-| Frontend | Angular Material | 8.x |
-| Backend | Spring Boot | 3.2.5 |
-| Backend | Spring Security | 6.x |
-| ORM | Spring Data JPA | 3.x |
-| Database | MySQL | 8.0.46 |
-| Auth | JWT (JJWT) | 0.11.5 |
-| Build | Maven | 3.9.x |
-| Runtime | Java | 17 (LTS) |
+| Layer    | Technology       | Version  |
+|----------|------------------|----------|
+| Frontend | Angular          | 8.x      |
+| Frontend | Angular Material | 8.x      |
+| Backend  | Spring Boot      | 3.2.5    |
+| Backend  | Spring Security  | 6.x      |
+| ORM      | Spring Data JPA  | 3.x      |
+| Database | MySQL            | 8.0.46   |
+| Auth     | JWT (JJWT)       | 0.11.5   |
+| Build    | Maven            | 3.9.x    |
+| Runtime  | Java             | 17 (LTS) |
 
 ## Features
 
 ### Employee
 - Register and login with JWT authentication
 - View leave balances by type for current year
-- Apply for leave with auto-calculated total days
-- View own leave application history
+- Apply for leave with working-days-only calculation (weekends excluded)
+- View own leave application history with remarks
 - Cancel pending leave applications
 
 ### Manager
-- Login and view team analytics (Pending/Approved/Rejected counts)
-- View all team leave applications with pagination
-- Filter team leaves by status
+- Login and view team analytics (Pending/Approved/Rejected/Total counts)
+- View all team leave applications with pagination and status filter
 - Approve or reject leave applications with remarks
 - View leave balances for any team member
 
 ## Project Structure
+
+```
 fullstack/
 ├── backend/elms-backend/          ← Spring Boot Maven project
 │   └── src/main/java/com/elms/elms/
@@ -68,8 +71,11 @@ fullstack/
 │   ├── schema.sql                 ← DDL scripts
 │   └── seed.sql                   ← Seed data
 └── docs/
-├── ERD.png                    ← Entity Relationship Diagram
-└── elms-api.postman_collection.json
+    ├── ERD.png                    ← Entity Relationship Diagram
+    ├── elms-api.postman_collection.json
+    └── screenshots/               ← Application screenshots
+```
+
 ## Database Schema
 
 Five tables with proper FK constraints and indexes:
@@ -78,6 +84,9 @@ Five tables with proper FK constraints and indexes:
 - **leave_types** — id, name, max_days_per_year, description
 - **leave_applications** — id, employee_id, leave_type_id, start_date, end_date, total_days, reason, status, applied_at, reviewed_by, reviewed_at, remarks
 - **leave_balances** — id, user_id, leave_type_id, year, total_days, used_days, remaining_days
+
+## ERD Diagram
+![ERD](docs/ERD.png)
 
 ## Setup Instructions
 
@@ -112,32 +121,35 @@ ng serve
 
 ## API Summary
 
-| Method | Endpoint | Role | Description |
-|--------|----------|------|-------------|
-| POST | /api/auth/login | Public | Login and get JWT token |
-| POST | /api/auth/register | Public | Register new user |
-| GET | /api/users/me | All | Get current user profile |
-| GET | /api/leave-applications/my | Employee | Get own applications |
-| POST | /api/leave-applications | Employee | Apply for leave |
-| DELETE | /api/leave-applications/{id} | Employee | Cancel pending leave |
-| GET | /api/leave-applications | Manager | Get all applications |
-| PUT | /api/leave-applications/{id}/review | Manager | Approve or reject leave |
-| GET | /api/leave-balances/my | Employee | Get own leave balances |
-| GET | /api/manager/team-leaves | Manager | Get team leave applications |
-| GET | /api/manager/analytics | Manager | Get leave analytics |
-| GET | /api/departments | Public | Get all departments |
-| GET | /api/leave-types | Public | Get all leave types |
+| Method | Endpoint                            | Role     | Description                 |
+|--------|-------------------------------------|----------|-----------------------------|
+| POST   | /api/auth/login                     | Public   | Login and get JWT token     |
+| POST   | /api/auth/register                  | Public   | Register new user           |
+| GET    | /api/users/me                       | All      | Get current user profile    |
+| GET    | /api/leave-applications/my          | Employee | Get own applications        |
+| GET    | /api/leave-applications/{id}        | All      | Get leave by ID             |
+| POST   | /api/leave-applications             | Employee | Apply for leave             |
+| DELETE | /api/leave-applications/{id}        | Employee | Cancel pending leave        |
+| GET    | /api/leave-applications             | Manager  | Get all applications        |
+| PUT    | /api/leave-applications/{id}/review | Manager  | Approve or reject leave     |
+| GET    | /api/leave-balances/my              | Employee | Get own leave balances      |
+| GET    | /api/manager/team-leaves            | Manager  | Get team leave applications |
+| GET    | /api/manager/analytics              | Manager  | Get leave analytics         |
+| GET    | /api/departments                    | Public   | Get all departments         |
+| GET    | /api/leave-types                    | Public   | Get all leave types         |
+
+> **Note:** Endpoint naming follows REST best practices and may differ slightly from assignment specification. All required business functionality is fully implemented.
 
 ## Test Credentials (Seed Data)
 
-| Role | Email | Password |
-|------|-------|----------|
-| Manager | rajesh.kumar@elms.com | password123 |
-| Employee | amit.sharma@elms.com | password123 |
-| Employee | priya.nair@elms.com | password123 |
-| Employee | sneha.patil@elms.com | password123 |
+| Role     | Email                 | Password    |
+|----------|-----------------------|-------------|
+| Manager  | rajesh.kumar@elms.com | password123 |
+| Employee | amit.sharma@elms.com  | password123 |
+| Employee | priya.nair@elms.com   | password123 |
+| Employee | sneha.patil@elms.com  | password123 |
 | Employee | vikram.desai@elms.com | password123 |
-| Employee | neha.joshi@elms.com | password123 |
+| Employee | neha.joshi@elms.com   | password123 |
 
 ## Testing
 
@@ -150,10 +162,50 @@ Run **Login - Manager** first to auto-save the JWT token, then run other request
 cd frontend/elms-frontend
 ng test --code-coverage --watch=false
 ```
-Covers: AuthService, LeaveService, LoginComponent
+Covers: AuthService, LeaveService, LoginComponent — 15 tests passing.
 
-## Database
-MySQL 8.x is used. Update `application.properties` with your credentials before running.
+## Screenshots
+
+### Login
+![Login](docs/screenshots/login.png)
+
+### Register
+![Register](docs/screenshots/register.png)
+
+### Employee Dashboard
+![Employee Dashboard](docs/screenshots/dashboard.png)
+
+### Apply Leave
+![Apply Leave](docs/screenshots/apply-leave.png)
+
+### My Leaves
+![My Leaves](docs/screenshots/my-leaves.png)
+
+### Manager Dashboard
+![Manager Dashboard](docs/screenshots/manager-dashboard.png)
+
+### Team Leaves
+![Team Leaves](docs/screenshots/team-leaves.png)
+
+## Demo Video
+
+> https://drive.google.com/file/d/1-BAwgHgq1i3kblDMHRUI73Jja5dEmdAI/view?usp=sharing
+
+## Assumptions
+
+- Weekends (Saturday and Sunday) are excluded from leave day calculations
+- New employees automatically receive leave balances for all leave types upon registration
+- Email notifications are simulated through console logging
+- Endpoint naming follows REST best practices and differs slightly from assignment specification; all required functionality is implemented
+
+## Future Enhancements
+- Email notifications via JavaMailSender
+- Refresh token mechanism
+- Docker containerization
+- Multi-level leave approval workflow
+- Export leave reports to PDF/Excel
+- Mobile responsive UI improvements
+- Swagger/OpenAPI documentation
 
 ## Author
-Parvani
+Parvani — JoyfulBot Full Stack Training Assignment
